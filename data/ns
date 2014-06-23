@@ -1,0 +1,494 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.2.1
+-- Dumped by pg_dump version 9.2.0
+-- Started on 2013-01-16 21:50:10
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 170 (class 3079 OID 11727)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 1940 (class 0 OID 0)
+-- Dependencies: 170
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- TOC entry 183 (class 1255 OID 16406)
+-- Name: lock_ns_tree(integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION lock_ns_tree(integer) RETURNS boolean
+    LANGUAGE plpgsql
+    AS $_$
+DECLARE tree_id ALIAS FOR $1;
+    _id INTEGER;
+BEGIN
+    SELECT id
+        INTO _id
+        FROM ns_tree
+        WHERE tree = tree_id FOR UPDATE;
+    RETURN TRUE;
+END;
+$_$;
+
+
+ALTER FUNCTION public.lock_ns_tree(integer) OWNER TO postgres;
+
+--
+-- TOC entry 186 (class 1255 OID 16413)
+-- Name: ns_tree_after_delete_func(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION ns_tree_after_delete_func() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    _skew_tree INTEGER;
+BEGIN
+    PERFORM lock_ns_tree(OLD.tree);
+-- Проверяем, стоит ли выполнять триггер:
+    IF OLD._trigger_for_delete = TRUE THEN RETURN OLD; END IF;
+-- Помечаем на удаление дочерние узлы:
+    UPDATE ns_tree
+        SET _trigger_for_delete = TRUE,
+            _trigger_lock_update = TRUE
+        WHERE
+            tree = OLD.tree AND
+            left_key > OLD.left_key AND
+            right_key < OLD.right_key;
+-- Удаляем помеченные узлы:
+    DELETE FROM ns_tree
+        WHERE
+            tree = OLD.tree AND
+            left_key > OLD.left_key AND
+            right_key < OLD.right_key;
+-- Убираем разрыв в ключах:
+    _skew_tree := OLD.right_key - OLD.left_key + 1;
+    UPDATE ns_tree
+        SET left_key = CASE WHEN left_key > OLD.left_key
+                            THEN left_key - _skew_tree
+                            ELSE left_key
+                       END,
+            right_key = right_key - _skew_tree,
+            _trigger_lock_update = TRUE
+        WHERE right_key > OLD.right_key AND
+            tree = OLD.tree;
+    RETURN OLD;
+END;
+$$;
+
+
+ALTER FUNCTION public.ns_tree_after_delete_func() OWNER TO postgres;
+
+--
+-- TOC entry 184 (class 1255 OID 16407)
+-- Name: ns_tree_before_insert_func(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION ns_tree_before_insert_func() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    _left_key       INTEGER;
+    _level          INTEGER;
+    _tmp_left_key   INTEGER;
+    _tmp_right_key  INTEGER;
+    _tmp_level      INTEGER;
+    _tmp_id         INTEGER;
+    _tmp_parent_id  INTEGER;
+BEGIN
+    PERFORM lock_ns_tree(NEW.tree);
+-- Нельзя эти поля ручками ставить:
+    NEW._trigger_for_delete := FALSE;
+    NEW._trigger_lock_update := FALSE;
+    _left_key := 0;
+    _level := 0;
+-- Если мы указали родителя:
+    IF NEW.parent_id IS NOT NULL AND NEW.parent_id > 0 THEN
+        SELECT right_key, "level" + 1
+            INTO _left_key, _level
+            FROM ns_tree
+            WHERE id = NEW.parent_id AND
+                  tree = NEW.tree;
+    END IF;
+-- Если мы указали левый ключ:
+    IF NEW.left_key IS NOT NULL AND
+       NEW.left_key > 0 AND 
+       (_left_key IS NULL OR _left_key = 0) THEN
+        SELECT id, left_key, right_key, "level", parent_id 
+            INTO _tmp_id, _tmp_left_key, _tmp_right_key, _tmp_level, _tmp_parent_id
+            FROM ns_tree
+            WHERE tree = NEW.tree AND (left_key = NEW.left_key OR right_key = NEW.left_key);
+        IF _tmp_left_key IS NOT NULL AND _tmp_left_key > 0 AND NEW.left_key = _tmp_left_key THEN
+            NEW.parent_id := _tmp_parent_id;
+            _left_key := NEW.left_key;
+            _level := _tmp_level;
+        ELSIF _tmp_left_key IS NOT NULL AND _tmp_left_key > 0 AND NEW.left_key = _tmp_right_key THEN
+            NEW.parent_id := _tmp_id;
+            _left_key := NEW.left_key;
+            _level := _tmp_level + 1;
+        END IF;
+    END IF;
+-- Если родитель или левый ключ не указан, или мы ничего не нашли:
+    IF _left_key IS NULL OR _left_key = 0 THEN
+        SELECT MAX(right_key) + 1
+            INTO _left_key
+            FROM ns_tree
+            WHERE tree = NEW.tree;
+        IF _left_key IS NULL OR _left_key = 0 THEN
+            _left_key := 1;
+        END IF;
+        _level := 0;
+        NEW.parent_id := 0; 
+    END IF;
+-- Устанавливаем полученные ключи для узла:
+    NEW.left_key := _left_key;
+    NEW.right_key := _left_key + 1;
+    NEW."level" := _level;
+-- Формируем развыв в дереве на месте вставки:
+    UPDATE ns_tree
+        SET left_key = left_key + 
+            CASE WHEN left_key >= _left_key 
+              THEN 2 
+              ELSE 0 
+            END,
+            right_key = right_key + 2,
+            _trigger_lock_update = TRUE
+        WHERE tree = NEW.tree AND right_key >= _left_key;
+    RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.ns_tree_before_insert_func() OWNER TO postgres;
+
+--
+-- TOC entry 185 (class 1255 OID 16410)
+-- Name: ns_tree_before_update_func(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION ns_tree_before_update_func() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    _left_key       INTEGER;
+    _level          INTEGER;
+    _skew_tree      INTEGER;
+    _skew_level     INTEGER;
+    _skew_edit      INTEGER;
+    _tmp_left_key   INTEGER;
+    _tmp_right_key  INTEGER;
+    _tmp_level      INTEGER;
+    _tmp_id         INTEGER;
+    _tmp_parent_id  INTEGER;
+BEGIN
+    PERFORM lock_ns_tree(OLD.tree);
+-- А стоит ли нам вообще что либо делать:
+    IF NEW._trigger_lock_update = TRUE THEN
+        NEW._trigger_lock_update := FALSE;
+        IF NEW._trigger_for_delete = TRUE THEN
+            NEW = OLD;
+            NEW._trigger_for_delete = TRUE;
+            RETURN NEW;
+        END IF;
+        RETURN NEW;
+    END IF;
+-- Сбрасываем значения полей, которые пользователь менять не может:
+    NEW._trigger_for_delete := FALSE;
+    NEW.tree := OLD.tree;
+    NEW.right_key := OLD.right_key;
+    NEW."level" := OLD."level";
+    IF NEW.parent_id IS NULL THEN NEW.parent_id := 0; END IF;
+-- Проверяем, а есть ли изменения связанные со структурой дерева
+    IF NEW.parent_id = OLD.parent_id AND NEW.left_key = OLD.left_key
+    THEN
+        RETURN NEW;
+    END IF;
+-- Дерево таки перестраиваем, что ж, приступим:
+    _left_key := 0;
+    _level := 0;
+    _skew_tree := OLD.right_key - OLD.left_key + 1;
+-- Определяем куда мы его переносим:
+-- Если сменен parent_id:
+    IF NEW.parent_id <> OLD.parent_id THEN
+-- Если в подчинение другому злу:
+        IF NEW.parent_id > 0 THEN
+            SELECT right_key, level + 1
+                INTO _left_key, _level
+                FROM ns_tree
+                WHERE id = NEW.parent_id AND tree = NEW.tree;
+-- Иначе в корень дерева переносим:
+        ELSE
+            SELECT MAX(right_key) + 1 
+                INTO _left_key
+                FROM ns_tree
+                WHERE tree = NEW.tree;
+            _level := 0;
+        END IF;
+-- Если вдруг родитель в диапазоне перемещаемого узла, проверка:
+        IF _left_key IS NOT NULL AND 
+           _left_key > 0 AND
+           _left_key > OLD.left_key AND
+           _left_key <= OLD.right_key 
+        THEN
+           NEW.parent_id := OLD.parent_id;
+           NEW.left_key := OLD.left_key;
+           RETURN NEW;
+        END IF;
+    END IF;
+-- Если же указан left_key, а parent_id - нет
+    IF _left_key IS NULL OR _left_key = 0 THEN
+        SELECT id, left_key, right_key, "level", parent_id 
+            INTO _tmp_id, _tmp_left_key, _tmp_right_key, _tmp_level, _tmp_parent_id
+            FROM ns_tree
+            WHERE tree = NEW.tree AND (right_key = NEW.left_key OR right_key = NEW.left_key - 1)
+            LIMIT 1;
+        IF _tmp_left_key IS NOT NULL AND _tmp_left_key > 0 AND NEW.left_key - 1 = _tmp_right_key THEN
+            NEW.parent_id := _tmp_parent_id;
+            _left_key := NEW.left_key;
+            _level := _tmp_level;
+        ELSIF _tmp_left_key IS NOT NULL AND _tmp_left_key > 0 AND NEW.left_key = _tmp_right_key THEN
+            NEW.parent_id := _tmp_id;
+            _left_key := NEW.left_key;
+            _level := _tmp_level + 1;
+        ELSIF NEW.left_key = 1 THEN
+            NEW.parent_id := 0;
+            _left_key := NEW.left_key;
+            _level := 0;
+        ELSE
+           NEW.parent_id := OLD.parent_id;
+           NEW.left_key := OLD.left_key;
+           RETURN NEW;
+        END IF;
+    END IF;
+-- Теперь мы знаем куда мы перемещаем дерево
+        _skew_level := _level - OLD."level";
+    IF _left_key > OLD.left_key THEN
+-- Перемещение вверх по дереву
+        _skew_edit := _left_key - OLD.left_key - _skew_tree;
+        UPDATE ns_tree
+            SET left_key =  CASE WHEN right_key <= OLD.right_key
+                                 THEN left_key + _skew_edit
+                                 ELSE CASE WHEN left_key > OLD.right_key
+                                           THEN left_key - _skew_tree
+                                           ELSE left_key
+                                      END
+                            END,
+                "level" =   CASE WHEN right_key <= OLD.right_key 
+                                 THEN "level" + _skew_level
+                                 ELSE "level"
+                            END,
+                right_key = CASE WHEN right_key <= OLD.right_key 
+                                 THEN right_key + _skew_edit
+                                 ELSE CASE WHEN right_key < _left_key
+                                           THEN right_key - _skew_tree
+                                           ELSE right_key
+                                      END
+                            END,
+                _trigger_lock_update = TRUE
+            WHERE tree = OLD.tree AND
+                  right_key > OLD.left_key AND
+                  left_key < _left_key AND
+                  id <> OLD.id;
+        _left_key := _left_key - _skew_tree;
+    ELSE
+-- Перемещение вниз по дереву:
+        _skew_edit := _left_key - OLD.left_key;
+        UPDATE ns_tree
+            SET
+                right_key = CASE WHEN left_key >= OLD.left_key
+                                 THEN right_key + _skew_edit
+                                 ELSE CASE WHEN right_key < OLD.left_key
+                                           THEN right_key + _skew_tree
+                                           ELSE right_key
+                                      END
+                            END,
+                "level" =   CASE WHEN left_key >= OLD.left_key
+                                 THEN "level" + _skew_level
+                                 ELSE "level"
+                            END,
+                left_key =  CASE WHEN left_key >= OLD.left_key
+                                 THEN left_key + _skew_edit
+                                 ELSE CASE WHEN left_key >= _left_key
+                                           THEN left_key + _skew_tree
+                                           ELSE left_key
+                                      END
+                            END,
+                 _trigger_lock_update = TRUE
+            WHERE tree = OLD.tree AND
+                  right_key >= _left_key AND
+                  left_key < OLD.right_key AND
+                  id <> OLD.id;
+    END IF;
+-- Дерево перестроили, остался только наш текущий узел
+    NEW.left_key := _left_key;
+    NEW."level" := _level;
+    NEW.right_key := _left_key + _skew_tree - 1;
+    RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.ns_tree_before_update_func() OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 169 (class 1259 OID 16396)
+-- Name: ns_tree; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE ns_tree (
+    id integer NOT NULL,
+    left_key integer NOT NULL,
+    right_key integer NOT NULL,
+    level integer DEFAULT 0 NOT NULL,
+    tree integer NOT NULL,
+    parent_id integer DEFAULT 0 NOT NULL,
+    _trigger_lock_update boolean DEFAULT false NOT NULL,
+    _trigger_for_delete boolean DEFAULT false NOT NULL,
+    name character varying(50)
+);
+
+
+ALTER TABLE public.ns_tree OWNER TO postgres;
+
+--
+-- TOC entry 168 (class 1259 OID 16394)
+-- Name: ns_tree_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE ns_tree_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.ns_tree_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 1941 (class 0 OID 0)
+-- Dependencies: 168
+-- Name: ns_tree_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE ns_tree_id_seq OWNED BY ns_tree.id;
+
+
+--
+-- TOC entry 1942 (class 0 OID 0)
+-- Dependencies: 168
+-- Name: ns_tree_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('ns_tree_id_seq', 1, false);
+
+
+--
+-- TOC entry 1920 (class 2604 OID 16399)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY ns_tree ALTER COLUMN id SET DEFAULT nextval('ns_tree_id_seq'::regclass);
+
+
+--
+-- TOC entry 1932 (class 0 OID 16396)
+-- Dependencies: 169
+-- Data for Name: ns_tree; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY ns_tree (id, left_key, right_key, level, tree, parent_id, _trigger_lock_update, _trigger_for_delete, name) FROM stdin;
+\.
+
+
+--
+-- TOC entry 1928 (class 2606 OID 16405)
+-- Name: ns_tree_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY ns_tree
+    ADD CONSTRAINT ns_tree_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1925 (class 1259 OID 16416)
+-- Name: ns_tree_Index01; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "ns_tree_Index01" ON ns_tree USING btree (left_key, right_key, level, tree);
+
+
+--
+-- TOC entry 1926 (class 1259 OID 16417)
+-- Name: ns_tree_Index02; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX "ns_tree_Index02" ON ns_tree USING btree (parent_id);
+
+
+--
+-- TOC entry 1931 (class 2620 OID 16415)
+-- Name: ns_tree_after_delete_tr; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER ns_tree_after_delete_tr AFTER DELETE ON ns_tree FOR EACH ROW EXECUTE PROCEDURE ns_tree_after_delete_func();
+
+
+--
+-- TOC entry 1929 (class 2620 OID 16408)
+-- Name: ns_tree_before_insert_tr; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER ns_tree_before_insert_tr BEFORE INSERT ON ns_tree FOR EACH ROW EXECUTE PROCEDURE ns_tree_before_insert_func();
+
+
+--
+-- TOC entry 1930 (class 2620 OID 16414)
+-- Name: ns_tree_before_update_tr; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER ns_tree_before_update_tr BEFORE UPDATE ON ns_tree FOR EACH ROW EXECUTE PROCEDURE ns_tree_before_update_func();
+
+
+--
+-- TOC entry 1939 (class 0 OID 0)
+-- Dependencies: 5
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2013-01-16 21:50:10
+
+--
+-- PostgreSQL database dump complete
+--
+

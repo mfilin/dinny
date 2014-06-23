@@ -1,0 +1,232 @@
+<XMLDiagram>
+  <TDBADiagramController Locked="0">
+    <Elements>
+      <TDBADiagramObject id="1" propertiesclass="TDiagramMetaTableProperties" objectname="public.ctl_Nmk">
+        <TDiagramMetaTableProperties>
+          <Glyph>
+            <Geometry left="340" top="310" width="200" height="111"/>
+          </Glyph>
+        </TDiagramMetaTableProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="2" propertiesclass="TDiagramForeignKeyProperties" objectname="public.ctl_Nmk.fk_ctl_nmk_parent">
+        <TDiagramForeignKeyProperties>
+          <Relation>
+            <Geometry left="48" top="48" width="200" height="100"/>
+            <Glyph>
+              <Geometry>
+                <Point x="440" y="370"/>
+                <Point x="560" y="400"/>
+                <Point x="560" y="440"/>
+                <Point x="530" y="440"/>
+                <Point x="440" y="370"/>
+              </Geometry>
+            </Glyph>
+          </Relation>
+        </TDiagramForeignKeyProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="3" propertiesclass="TDiagramMetaTableProperties" objectname="public.ctl_Unit">
+        <TDiagramMetaTableProperties>
+          <Glyph>
+            <Geometry left="340" top="490" width="200" height="97"/>
+          </Glyph>
+        </TDiagramMetaTableProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="6" propertiesclass="TDiagramMetaTableProperties" objectname="public.ctl_Dish">
+        <TDiagramMetaTableProperties>
+          <Glyph>
+            <Geometry left="40" top="480" width="200" height="150"/>
+          </Glyph>
+        </TDiagramMetaTableProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="7" propertiesclass="TDiagramForeignKeyProperties" objectname="public.ctl_Dish.fk_ctl_Dish_Unit">
+        <TDiagramForeignKeyProperties>
+          <Relation>
+            <Geometry left="128" top="128" width="200" height="100"/>
+            <Glyph>
+              <Geometry>
+                <Point x="140" y="553"/>
+                <Point x="440" y="540"/>
+              </Geometry>
+            </Glyph>
+          </Relation>
+        </TDiagramForeignKeyProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="5" propertiesclass="TDiagramForeignKeyProperties" objectname="public.ctl_Nmk.fk_ctl_nmk_unit">
+        <TDiagramForeignKeyProperties>
+          <Relation>
+            <Geometry left="112" top="112" width="200" height="100"/>
+            <Glyph>
+              <Geometry>
+                <Point x="440" y="370"/>
+                <Point x="440" y="540"/>
+              </Geometry>
+            </Glyph>
+          </Relation>
+        </TDiagramForeignKeyProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="4" propertiesclass="TDiagramMetaTableProperties" objectname="public.ctl_DishNmk">
+        <TDiagramMetaTableProperties>
+          <Glyph>
+            <Geometry left="50" top="310" width="200" height="125"/>
+          </Glyph>
+        </TDiagramMetaTableProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="8" propertiesclass="TDiagramForeignKeyProperties" objectname="public.ctl_DishNmk.fk_ctl_dishnmk_nmk">
+        <TDiagramForeignKeyProperties>
+          <Relation>
+            <Geometry left="128" top="128" width="200" height="100"/>
+            <Glyph>
+              <Geometry>
+                <Point x="160" y="370"/>
+                <Point x="440" y="370"/>
+              </Geometry>
+            </Glyph>
+          </Relation>
+        </TDiagramForeignKeyProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="9" propertiesclass="TDiagramForeignKeyProperties" objectname="public.ctl_DishNmk.fk_ctl_dishnmk_dish">
+        <TDiagramForeignKeyProperties>
+          <Relation>
+            <Geometry left="144" top="144" width="200" height="100"/>
+            <Glyph>
+              <Geometry>
+                <Point x="150" y="370"/>
+                <Point x="150" y="553"/>
+              </Geometry>
+            </Glyph>
+          </Relation>
+        </TDiagramForeignKeyProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="10" propertiesclass="TDiagramMetaTableProperties" objectname="public.ctl_Person">
+        <TDiagramMetaTableProperties>
+          <Glyph>
+            <Geometry left="880" top="90" width="200" height="125"/>
+          </Glyph>
+        </TDiagramMetaTableProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="11" propertiesclass="TDiagramForeignKeyProperties" objectname="public.ctl_Person.fk_ctl_person_parent">
+        <TDiagramForeignKeyProperties>
+          <Relation>
+            <Geometry left="176" top="176" width="200" height="100"/>
+            <Glyph>
+              <Geometry>
+                <Point x="980" y="152"/>
+                <Point x="1100" y="192"/>
+                <Point x="1100" y="230"/>
+                <Point x="1060" y="230"/>
+                <Point x="980" y="152"/>
+              </Geometry>
+            </Glyph>
+          </Relation>
+        </TDiagramForeignKeyProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="12" propertiesclass="TDiagramMetaTableProperties" objectname="public.doc_Recipe">
+        <TDiagramMetaTableProperties>
+          <Glyph>
+            <Geometry left="340" top="80" width="200" height="180"/>
+          </Glyph>
+        </TDiagramMetaTableProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="13" propertiesclass="TDiagramMetaTableProperties" objectname="public.doc_RecipeCost">
+        <TDiagramMetaTableProperties>
+          <Glyph>
+            <Geometry left="50" top="110" width="200" height="117"/>
+          </Glyph>
+        </TDiagramMetaTableProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="17" propertiesclass="TDiagramForeignKeyProperties" objectname="public.doc_RecipeCost.fk_recipe_recipecost">
+        <TDiagramForeignKeyProperties>
+          <Relation>
+            <Geometry left="272" top="272" width="200" height="100"/>
+            <Glyph>
+              <Geometry>
+                <Point x="150" y="170"/>
+                <Point x="440" y="170"/>
+              </Geometry>
+            </Glyph>
+          </Relation>
+        </TDiagramForeignKeyProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="14" propertiesclass="TDiagramForeignKeyProperties" objectname="public.doc_RecipeCost.fk_cost_dishnmk">
+        <TDiagramForeignKeyProperties>
+          <Relation>
+            <Geometry left="240" top="240" width="200" height="100"/>
+            <Glyph>
+              <Geometry>
+                <Point x="150" y="170"/>
+                <Point x="150" y="380"/>
+              </Geometry>
+            </Glyph>
+          </Relation>
+        </TDiagramForeignKeyProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="15" propertiesclass="TDiagramMetaTableProperties" objectname="public.doc_Delivery">
+        <TDiagramMetaTableProperties>
+          <Glyph>
+            <Geometry left="620" top="80" width="200" height="100"/>
+          </Glyph>
+        </TDiagramMetaTableProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="16" propertiesclass="TDiagramForeignKeyProperties" objectname="public.doc_Delivery.fk_person_delivery">
+        <TDiagramForeignKeyProperties>
+          <Relation>
+            <Geometry left="272" top="272" width="200" height="100"/>
+            <Glyph>
+              <Geometry>
+                <Point x="670" y="149"/>
+                <Point x="980" y="150"/>
+              </Geometry>
+            </Glyph>
+          </Relation>
+        </TDiagramForeignKeyProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="18" propertiesclass="TDiagramMetaTableProperties" objectname="public.doc_DeliveryCost">
+        <TDiagramMetaTableProperties>
+          <Glyph>
+            <Geometry left="620" top="290" width="200" height="170"/>
+          </Glyph>
+        </TDiagramMetaTableProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="19" propertiesclass="TDiagramForeignKeyProperties" objectname="public.doc_DeliveryCost.fk_deliverycost">
+        <TDiagramForeignKeyProperties>
+          <Relation>
+            <Geometry left="304" top="304" width="200" height="100"/>
+            <Glyph>
+              <Geometry>
+                <Point x="710" y="390"/>
+                <Point x="710" y="129"/>
+              </Geometry>
+            </Glyph>
+          </Relation>
+        </TDiagramForeignKeyProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="20" propertiesclass="TDiagramForeignKeyProperties" objectname="public.doc_DeliveryCost.fk_nmk_delivery">
+        <TDiagramForeignKeyProperties>
+          <Relation>
+            <Geometry left="320" top="320" width="200" height="100"/>
+            <Glyph>
+              <Geometry>
+                <Point x="690" y="380"/>
+                <Point x="460" y="360"/>
+              </Geometry>
+            </Glyph>
+          </Relation>
+        </TDiagramForeignKeyProperties>
+      </TDBADiagramObject>
+      <TDBADiagramObject id="21" propertiesclass="TDiagramForeignKeyProperties" objectname="public.doc_DeliveryCost.fk_unit_delivery">
+        <TDiagramForeignKeyProperties>
+          <Relation>
+            <Geometry left="336" top="336" width="200" height="100"/>
+            <Glyph>
+              <Geometry>
+                <Point x="680" y="410"/>
+                <Point x="420" y="540"/>
+              </Geometry>
+            </Glyph>
+          </Relation>
+        </TDiagramForeignKeyProperties>
+      </TDBADiagramObject>
+    </Elements>
+    <Surface zoom="100" scrollx="0" scrolly="0"/>
+  </TDBADiagramController>
+</XMLDiagram>

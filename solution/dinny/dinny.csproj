@@ -1,0 +1,463 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A4B23DCC-64EA-49BD-B007-3FD2D0EF96DE}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>dinny</RootNamespace>
+    <AssemblyName>dinny</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CarlosAg.ExcelXmlWriter">
+      <HintPath>..\..\lib\CarlosAg.ExcelXmlWriter.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\lib\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Windows.Forms, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Data.v12.1, Version=12.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\DevExpress.Data.v12.1.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Printing.v12.1.Core, Version=12.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\DevExpress.Printing.v12.1.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v12.1, Version=12.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\DevExpress.Utils.v12.1.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraEditors.v12.1, Version=12.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\DevExpress.XtraEditors.v12.1.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ExtendedRichTextBox">
+      <HintPath>..\..\lib\ExtendedRichTextBox.dll</HintPath>
+    </Reference>
+    <Reference Include="FlashControlV71, Version=1.0.3187.32366, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
+    <Reference Include="FluentNHibernate">
+      <HintPath>..\..\lib\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\..\lib\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Mono.Security">
+      <HintPath>..\..\lib\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\lib\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle">
+      <HintPath>..\..\lib\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.Validator">
+      <HintPath>..\..\lib\NHibernate.Validator.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.Validator.Specific">
+      <HintPath>..\..\lib\NHibernate.Validator.Specific.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql">
+      <HintPath>..\..\lib\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="ObjectListView">
+      <HintPath>..\..\lib\ObjectListView.dll</HintPath>
+    </Reference>
+    <Reference Include="Qios.DevSuite.Components, Version=4.0.0.20, Culture=neutral, PublicKeyToken=3cc53827b79c92fa, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Qios.DevSuite.Components.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\Configuration.cs" />
+    <Compile Include="Data\DataContext.cs" />
+    <Compile Include="Data\DomainObject.cs" />
+    <Compile Include="Data\FilterUtils.cs" />
+    <Compile Include="Data\IGenericObject.cs" />
+    <Compile Include="Domain\Entities\Delivery.cs" />
+    <Compile Include="Domain\Entities\DeliveryCost.cs" />
+    <Compile Include="Domain\Entities\Setting.cs" />
+    <Compile Include="Domain\Entities\Person.cs" />
+    <Compile Include="Domain\Entities\Dish.cs" />
+    <Compile Include="Domain\Entities\DishNmk.cs" />
+    <Compile Include="Domain\Entities\Nmk.cs" />
+    <Compile Include="Domain\Entities\Recipe.cs" />
+    <Compile Include="Domain\Entities\RecipeCost.cs" />
+    <Compile Include="Domain\Entities\Unit.cs" />
+    <Compile Include="Domain\Managers\DeliveryManager.cs" />
+    <Compile Include="Domain\Managers\SettingManager.cs" />
+    <Compile Include="Domain\Managers\DishManager.cs" />
+    <Compile Include="Domain\Managers\RecipeManager.cs" />
+    <Compile Include="Domain\Mappers\DeliveryCostMap.cs" />
+    <Compile Include="Domain\Mappers\DeliveryMap.cs" />
+    <Compile Include="Domain\Mappers\SettingMap.cs" />
+    <Compile Include="Domain\Mappers\PersonMap.cs" />
+    <Compile Include="Domain\Mappers\DishMap.cs" />
+    <Compile Include="Domain\Mappers\DishNmkMap.cs" />
+    <Compile Include="Domain\Mappers\NmkMap.cs" />
+    <Compile Include="Domain\Mappers\RecipeCostMap.cs" />
+    <Compile Include="Domain\Mappers\RecipeMap.cs" />
+    <Compile Include="Domain\Mappers\UnitMap.cs" />
+    <Compile Include="Forms\ctl\frmSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ctl\frmSetting.designer.cs">
+      <DependentUpon>frmSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ctl\frmSettingList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ctl\frmSettingList.designer.cs">
+      <DependentUpon>frmSettingList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ctl\frmPerson.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ctl\frmPerson.designer.cs">
+      <DependentUpon>frmPerson.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ctl\frmPersonList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ctl\frmPersonList.designer.cs">
+      <DependentUpon>frmPersonList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ctl\frmDishNmk.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ctl\frmDishNmk.designer.cs">
+      <DependentUpon>frmDishNmk.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ctl\frmDishList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ctl\frmDishList.designer.cs">
+      <DependentUpon>frmDishList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ctl\frmDish.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ctl\frmDish.designer.cs">
+      <DependentUpon>frmDish.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ctl\frmNmk.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ctl\frmNmk.designer.cs">
+      <DependentUpon>frmNmk.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ctl\frmNmkList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ctl\frmNmkList.designer.cs">
+      <DependentUpon>frmNmkList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ctl\frmUnit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ctl\frmUnit.designer.cs">
+      <DependentUpon>frmUnit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ctl\frmUnitList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ctl\frmUnitList.designer.cs">
+      <DependentUpon>frmUnitList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\docs\frmDeliveryCost.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\docs\frmDeliveryCost.designer.cs">
+      <DependentUpon>frmDeliveryCost.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\docs\frmDelivery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\docs\frmDelivery.designer.cs">
+      <DependentUpon>frmDelivery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\docs\frmDeliveryList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\docs\frmDeliveryList.designer.cs">
+      <DependentUpon>frmDeliveryList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\docs\frmRecipe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\docs\frmRecipe.designer.cs">
+      <DependentUpon>frmRecipe.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\docs\frmRecipeList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\docs\frmRecipeList.designer.cs">
+      <DependentUpon>frmRecipeList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Enums.cs" />
+    <Compile Include="Forms\frmChild.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmChild.designer.cs">
+      <DependentUpon>frmChild.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\dataview\view_rptDelivery.cs" />
+    <Compile Include="Reports\dataview\view_rptTCard.cs" />
+    <Compile Include="Reports\Extensions.cs" />
+    <Compile Include="Reports\frmReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\frmReport.Designer.cs">
+      <DependentUpon>frmReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\rptview\rptDelivery.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptDelivery.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptview\rptOP1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptOP1.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\dataview\view_rptOP1.cs" />
+    <Compile Include="Reports\rptview\rptSubRecipe.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptSubRecipe.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptview\rptTCard.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptTCard.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptview\rptViewer.cs" />
+    <EmbeddedResource Include="Forms\ctl\frmSetting.resx">
+      <DependentUpon>frmSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ctl\frmSettingList.resx">
+      <DependentUpon>frmSettingList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ctl\frmPerson.resx">
+      <DependentUpon>frmPerson.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ctl\frmPersonList.resx">
+      <DependentUpon>frmPersonList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ctl\frmDishNmk.resx">
+      <DependentUpon>frmDishNmk.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ctl\frmDishList.resx">
+      <DependentUpon>frmDishList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ctl\frmDish.resx">
+      <DependentUpon>frmDish.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ctl\frmNmk.resx">
+      <DependentUpon>frmNmk.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ctl\frmNmkList.resx">
+      <DependentUpon>frmNmkList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ctl\frmUnit.resx">
+      <DependentUpon>frmUnit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ctl\frmUnitList.resx">
+      <DependentUpon>frmUnitList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\docs\frmDeliveryCost.resx">
+      <DependentUpon>frmDeliveryCost.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\docs\frmDelivery.resx">
+      <DependentUpon>frmDelivery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\docs\frmDeliveryList.resx">
+      <DependentUpon>frmDeliveryList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\docs\frmRecipe.resx">
+      <DependentUpon>frmRecipe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\docs\frmRecipeList.resx">
+      <DependentUpon>frmRecipeList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmChild.resx">
+      <DependentUpon>frmChild.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="prop\resources.ru-RU.resources">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\frmReport.resx">
+      <DependentUpon>frmReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptview\rptDelivery.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptDelivery.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptview\rptOP1.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptOP1.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptview\rptSubRecipe.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptSubRecipe.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptview\rptTCard.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptTCard.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="Properties\DataSources\dinny.Domain.Delivery.datasource" />
+    <None Include="Properties\DataSources\dinny.Domain.DeliveryCost.datasource" />
+    <None Include="Properties\DataSources\dinny.Domain.Dish.datasource" />
+    <None Include="Properties\DataSources\dinny.Domain.DishNmk.datasource" />
+    <None Include="Properties\DataSources\dinny.Domain.Nmk.datasource" />
+    <None Include="Properties\DataSources\dinny.Domain.Person.datasource" />
+    <None Include="Properties\DataSources\dinny.Domain.Recipe.datasource" />
+    <None Include="Properties\DataSources\dinny.Domain.Setting.datasource" />
+    <None Include="Properties\DataSources\dinny.Domain.Unit.datasource" />
+    <None Include="Properties\DataSources\dinny.Reports.rptOP1.datasource" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Graphics\binoc.ico" />
+    <Content Include="Graphics\bold.ico" />
+    <Content Include="Graphics\centre.ico" />
+    <Content Include="Graphics\copy.ico" />
+    <Content Include="Graphics\cut.ico" />
+    <Content Include="Graphics\delete.ico" />
+    <Content Include="Graphics\find_dc2.ico" />
+    <Content Include="Graphics\find_doc.ico" />
+    <Content Include="Graphics\font.ico" />
+    <Content Include="Graphics\font_big.ico" />
+    <Content Include="Graphics\font_sml.ico" />
+    <Content Include="Graphics\font_wid.ico" />
+    <Content Include="Graphics\help.ico" />
+    <Content Include="Graphics\help_ptr.ico" />
+    <Content Include="Graphics\italic.ico" />
+    <Content Include="Graphics\justify.ico" />
+    <Content Include="Graphics\left.ico" />
+    <Content Include="Graphics\lst2icon.ico" />
+    <Content Include="Graphics\mail.ico" />
+    <Content Include="Graphics\mail2.ico" />
+    <Content Include="Graphics\new.ico" />
+    <Content Include="Graphics\open.ico" />
+    <Content Include="Graphics\paste.ico" />
+    <Content Include="Graphics\print.ico" />
+    <Content Include="Graphics\print2.ico" />
+    <Content Include="Graphics\redo.ico" />
+    <Content Include="Graphics\refresh.ico" />
+    <Content Include="Graphics\right.ico" />
+    <Content Include="Graphics\save.ico" />
+    <Content Include="Graphics\toupper.ico" />
+    <Content Include="Graphics\underlne.ico" />
+    <Content Include="Graphics\undo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\modules\ExtControl2\ExtControl2.csproj">
+      <Project>{BDAF01C6-A352-4470-A3E2-B8DD3582D6E3}</Project>
+      <Name>ExtControl2</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>call release.bat</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
